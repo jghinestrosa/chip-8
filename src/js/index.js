@@ -9,6 +9,7 @@ import loadRom from './rom';
 const canvas = document.querySelector('canvas.display');
 const h2 = document.querySelector('h2');
 const fileInput = document.querySelector('#file-explorer');
+const select = document.querySelector('#select-preloaded-rom');
 
 // Chip-8 related objects
 const { memory, clearMemory } = createMemory();
@@ -53,6 +54,23 @@ function start(romArrayBuffer) {
   cpu.start({ display, keys });
 }
 
+function onArrayBufferReady(arrayBuffer) {
+  const romArrayBuffer = new Uint8Array(arrayBuffer);
+
+  // If the CPU is currently working, stop it and when it is stopped, switch the ROM
+  if (cpu.isWorking()) {
+    const switchRom = createSwitchRom(romArrayBuffer);
+    cpu.on('stop', switchRom);
+    console.log('> Stop CPU');
+    cpu.stop();
+    return;
+  }
+
+  console.log('> CPU is not working yet');
+  // Starts by loading the ROM and starting the CPU cycles
+  start(romArrayBuffer);
+}
+
 fileInput.addEventListener('change', (event) => {
   const [file] = event.target.files;
   const fileReader = new FileReader();
@@ -61,22 +79,18 @@ fileInput.addEventListener('change', (event) => {
     const fileBuffer = event.target.result;
     h2.textContent = `Playing: ${file.name}`;
     h2.classList.remove('hidden');
-
-    const romArrayBuffer = new Uint8Array(fileBuffer); 
-
-    // If the CPU is currently working, stop it and when it is stopped, switch the ROM
-    if (cpu.isWorking()) {
-      const switchRom = createSwitchRom(romArrayBuffer);
-      cpu.on('stop', switchRom);
-      console.log('> Stop CPU');
-      cpu.stop();
-      return;
-    }
-
-    console.log('> CPU is not working yet');
-    // Starts by loading the ROM and starting the CPU cycles
-    start(romArrayBuffer);
+    onArrayBufferReady(fileBuffer);
   });
 
   fileReader.readAsArrayBuffer(file);
+});
+
+select.addEventListener('change', (event) => {
+  const { value } = event.target;
+  h2.textContent = `Playing: ${value}`;
+  h2.classList.remove('hidden');
+
+  fetch(`/roms/${value}`)
+    .then((response) => response.arrayBuffer())
+    .then(onArrayBufferReady)
 });
