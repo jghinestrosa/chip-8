@@ -1,4 +1,4 @@
-import instructions from './instructions';
+import instructions from '../../instructions';
 
 /**
  * Decodes the instruction from an opcode
