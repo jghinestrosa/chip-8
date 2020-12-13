@@ -5,13 +5,14 @@ import loadFonts from './fonts';
 import createKeysHandler from './keys';
 import loadRom from './rom';
 
-const { memory, clearMemory } = createMemory();
-const cpu = createCpu(memory);
-
+// DOM elements
 const canvas = document.querySelector('canvas.display');
 const h2 = document.querySelector('h2');
 const fileInput = document.querySelector('#file-explorer');
 
+// Chip-8 related objects
+const { memory, clearMemory } = createMemory();
+const cpu = createCpu(memory);
 const display = createDisplay(canvas);
 const { keys, onKeyDown, onKeyUp } = createKeysHandler();
 

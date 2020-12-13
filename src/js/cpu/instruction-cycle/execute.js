@@ -167,7 +167,7 @@ export const executions = {
     counters.PC = counters.PC + 2;
   },
   SHL_VX_VY: ({ registers, args, counters }) => {
-    const [regX] = args; 
+    const [regX, regY] = args; 
     const x = registers[regX];
     registers[0xf] = x >> 7;
     registers[regX] = x << 1;
