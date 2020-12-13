@@ -1,3 +1,9 @@
+/*
+ Preloaded sprites that represents hexadecimal digits from 0 through F.
+ Since this is stored in memory, the width of the sprite is 8 bits (size of the memory address)
+ Each sprite is 5 bytes long (8x5 pixels)
+ The font data should be stored from 0x000 to 0x1FF
+*/
 export default [ 
 // 0
 0xF0,
