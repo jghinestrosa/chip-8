@@ -14,6 +14,9 @@ const fileInput = document.querySelector('#file-explorer');
 const display = createDisplay(canvas);
 const { keys, onKeyDown, onKeyUp } = createKeysHandler();
 
+/**
+ * Start listening key up / down events from document.body
+ */
 function listenKeyEvents() {
   document.body.addEventListener('keydown', onKeyDown);
   document.body.addEventListener('keyup', onKeyUp);
@@ -24,6 +27,25 @@ display.clear();
 loadFonts(memory);
 listenKeyEvents();
 
+/**
+ * Creates a callback function that resets the current CPU, memory and display status and
+ * loads another ROM
+ * @param {Uint8Array} romArrayBuffer 
+ */
+function createSwitchRom(romArrayBuffer) {
+  return function switchRom() {
+    console.log('> Switch ROM');
+    cpu.reset();
+    display.clear();
+    clearMemory(memory);
+    start(romArrayBuffer);
+  }
+}
+
+/**
+ * Loads a ROM and starts the CPU
+ * @param {Uint8Array} romArrayBuffer 
+ */
 function start(romArrayBuffer) {
   loadRom(memory, romArrayBuffer);
   cpu.start({ display, keys });
@@ -35,23 +57,20 @@ fileInput.addEventListener('change', (event) => {
 
   fileReader.addEventListener('loadend', event => {
     const fileBuffer = event.target.result;
-    const uint8Array = new Uint8Array(fileBuffer); 
+    const romArrayBuffer = new Uint8Array(fileBuffer); 
 
+    // If the CPU is currently working, stop it and when it is stopped, switch the ROM
     if (cpu.isWorking()) {
-      cpu.on('stop', () => {
-        console.log('>>>> CPU STOPPED, LETS LOAD ANOTHER ROM');
-        cpu.reset();
-        display.clear();
-        clearMemory(memory);
-        start(uint8Array);
-      });
-
+      const switchRom = createSwitchRom(romArrayBuffer);
+      cpu.on('stop', switchRom);
+      console.log('> Stop CPU');
       cpu.stop();
       return;
     }
 
-    console.log('>>>> CPU NOT WORkING, LETS LOAD THE FIRST ROM');
-    start(uint8Array);
+    console.log('> CPU is not working yet');
+    // Starts by loading the ROM and starting the CPU cycles
+    start(romArrayBuffer);
   });
 
   fileReader.readAsArrayBuffer(file);
