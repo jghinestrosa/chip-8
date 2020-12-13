@@ -9,6 +9,7 @@ const { memory, clearMemory } = createMemory();
 const cpu = createCpu(memory);
 
 const canvas = document.querySelector('canvas.display');
+const h2 = document.querySelector('h2');
 const fileInput = document.querySelector('#file-explorer');
 
 const display = createDisplay(canvas);
@@ -57,6 +58,9 @@ fileInput.addEventListener('change', (event) => {
 
   fileReader.addEventListener('loadend', event => {
     const fileBuffer = event.target.result;
+    h2.textContent = `Playing: ${file.name}`;
+    h2.classList.remove('hidden');
+
     const romArrayBuffer = new Uint8Array(fileBuffer); 
 
     // If the CPU is currently working, stop it and when it is stopped, switch the ROM

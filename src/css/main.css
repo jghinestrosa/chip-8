@@ -1,8 +1,61 @@
+body {
+  background: black;
+}
+
+h1, h2 {
+  font-family: 'Press Start 2P';
+  color: #0f0;
+  text-align: center;
+}
+
+h2 {
+  font-size: 0.8em;
+}
+
+.hidden {
+  visibility: hidden;
+}
+
 .display {
   border: 1px solid black;
-  width: 500px;
+  display: block;
+  width: 60vw;
   image-rendering: -moz-crisp-edges;
   image-rendering: -webkit-crisp-edges;
   image-rendering: pixelated;
   image-rendering: crisp-edges;
+  border: 1px solid #0f0;
+  margin: 0 auto;
+}
+
+.rom-selection {
+  text-align: center;
+  margin: 1em;
+}
+
+#select-preloaded-rom {
+  font-family: 'Press Start 2P';
+  font-size: 0.8em;
+  color: #0f0;
+  background: black;
+  padding: 1em;
+  border: 2px solid gray;
+  cursor: pointer;
+}
+
+.upload-file, .select-preloaded-rom {
+  display: inline-block;
+}
+
+#label-file-explorer {
+  font-family: 'Press Start 2P';
+  font-size: 0.8em;
+  color: #0f0;
+  cursor: pointer;
+  border: 2px solid gray;
+  padding: 1em;
+}
+
+#file-explorer {
+  display: none;
 }
