@@ -1,8 +1,9 @@
 import createCpu from './cpu';
 import createMemory from './memory';
 import createDisplay from './display';
-import fonts from './fonts';
+import loadFonts from './fonts';
 import createKeysHandler from './keys';
+import loadRom from './rom';
 
 const memory = createMemory();
 const cpu = createCpu(memory);
@@ -13,24 +14,14 @@ const fileInput = document.querySelector('#file-explorer');
 const display = createDisplay(canvas);
 const { keys, onKeyDown, onKeyUp } = createKeysHandler();
 
-function load(romArrayBuffer) {
-  for (let i = 0; i < fonts.length; i++) {
-    const fontSprite = fonts[i];
-    memory[i] = fontSprite;
-  }
-
-  for (let i = 0; i < romArrayBuffer.byteLength; i++) {
-    const byte = romArrayBuffer[i];
-    memory[0x200 + i] = byte;
-  }
-}
-
 function listenKeyEvents() {
   document.body.addEventListener('keydown', onKeyDown);
   document.body.addEventListener('keyup', onKeyUp);
 }
 
+// Init the Chip-8 implementation
 display.clear();
+loadFonts(memory);
 
 fileInput.addEventListener('change', (event) => {
   const [file] = event.target.files;
@@ -39,7 +30,7 @@ fileInput.addEventListener('change', (event) => {
     const fileBuffer = event.target.result;
     const uint8Array = new Uint8Array(fileBuffer); 
     window.uint8Array = uint8Array;
-    load(uint8Array, cpu);
+    loadRom(memory, uint8Array);
     listenKeyEvents();
     cpu.start({ display, keys });
   });
