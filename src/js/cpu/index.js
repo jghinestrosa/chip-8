@@ -13,10 +13,52 @@ export default function create(memory) {
     ST: 0  // Sound timer
   };
 
+  const flags = {
+    isWorking: false
+  };
+
+  let events = {};
+
   function start({ display, keys }) {
     const cpu = { registers, stack, counters, timers };
-    cycle({ cpu, memory, display, keys });
+    flags.isWorking = true;
+    events = {};
+    cycle({ cpu, memory, display, keys, flags, trigger });
   }
 
-  return { start };
+  function stop() {
+    flags.isWorking = false;
+  }
+
+  function reset() {
+    counters.PC = 0x200;
+    counters.I = 0;
+    counters.SP = -1;
+    timers.DT = 0;
+    timers.ST = 0;
+
+    for (let i = 0; i < registers.length; i++) {
+      registers[i] = 0;
+    }
+
+    for (let i = 0; i < stack.length; i++) {
+      stack[i] = 0;
+    }
+  }
+
+  function on(event, callback) {
+    events[event] = events[event] || [];
+    events[event].push(callback);
+  }
+
+  function trigger(event) {
+    const listeners = events[event] || [];
+    listeners.forEach((callback) => callback());
+  }
+  
+  function isWorking() {
+    return flags.isWorking;
+  }
+
+  return { start, stop, reset, on, isWorking };
 }

@@ -5,7 +5,7 @@ import loadFonts from './fonts';
 import createKeysHandler from './keys';
 import loadRom from './rom';
 
-const memory = createMemory();
+const { memory, clearMemory } = createMemory();
 const cpu = createCpu(memory);
 
 const canvas = document.querySelector('canvas.display');
@@ -22,17 +22,36 @@ function listenKeyEvents() {
 // Init the Chip-8 implementation
 display.clear();
 loadFonts(memory);
+listenKeyEvents();
+
+function start(romArrayBuffer) {
+  loadRom(memory, romArrayBuffer);
+  cpu.start({ display, keys });
+}
 
 fileInput.addEventListener('change', (event) => {
   const [file] = event.target.files;
   const fileReader = new FileReader();
+
   fileReader.addEventListener('loadend', event => {
     const fileBuffer = event.target.result;
     const uint8Array = new Uint8Array(fileBuffer); 
-    window.uint8Array = uint8Array;
-    loadRom(memory, uint8Array);
-    listenKeyEvents();
-    cpu.start({ display, keys });
+
+    if (cpu.isWorking()) {
+      cpu.on('stop', () => {
+        console.log('>>>> CPU STOPPED, LETS LOAD ANOTHER ROM');
+        cpu.reset();
+        display.clear();
+        clearMemory(memory);
+        start(uint8Array);
+      });
+
+      cpu.stop();
+      return;
+    }
+
+    console.log('>>>> CPU NOT WORkING, LETS LOAD THE FIRST ROM');
+    start(uint8Array);
   });
 
   fileReader.readAsArrayBuffer(file);
