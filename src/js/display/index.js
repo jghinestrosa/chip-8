@@ -20,7 +20,6 @@ export default function createDisplay(canvas) {
 
   function drawPixel(x, y, value) {
     frameBuffer[y][x] = value;
-    console.log('>>> DRAW PIXEL', x, y , value);
     canvasHandler.drawPixel(x, y, value);
   }
 

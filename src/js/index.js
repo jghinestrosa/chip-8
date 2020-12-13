@@ -2,6 +2,7 @@ import createCpu from './cpu/create';
 import cycle from './cpu/instruction-cycle';
 import createDisplay from './display';
 import fonts from './fonts';
+import createKeysHandler from './keys';
 
 const cpu = createCpu();
 
@@ -9,23 +10,7 @@ const canvas = document.querySelector('canvas.display');
 const fileInput = document.querySelector('#file-explorer');
 
 const display = createDisplay(canvas);
-
-const keyMap = [
-  '1', '2', '3', '4',
-  'q', 'w', 'e', 'r', 
-  'a', 's', 'd', 'f', 
-  'z', 'x', 'c', 'v'
-];
-
-const keys = {
-  pressed: [
-    0, 0, 0, 0,
-    0, 0, 0, 0, 
-    0, 0, 0, 0, 
-    0, 0, 0, 0
-  ],
-  lastPressed: -1
-};
+const { keys, onKeyDown, onKeyUp } = createKeysHandler();
 
 function load(romArrayBuffer, cpu) {
   const { memory } = cpu;
@@ -39,29 +24,11 @@ function load(romArrayBuffer, cpu) {
     const byte = romArrayBuffer[i];
     memory[0x200 + i] = byte;
   }
-
 }
 
 function listenKeyEvents() {
-  document.body.addEventListener('keydown', (event) => {
-    const { key } = event;
-    const index = keyMap.indexOf(key);
-    if (index > -1) {
-      keys.pressed[index] = 1;
-      keys.lastPressed = index;
-      // console.log(keys.pressed);
-    };
-  });
-
-  document.body.addEventListener('keyup', (event) => {
-    const { key } = event;
-    const index = keyMap.indexOf(key);
-    if (index > -1) {
-      keys.pressed[index] = 0;
-      keys.lastPressed = -1;
-      // console.log(keys.pressed);
-    };
-  });
+  document.body.addEventListener('keydown', onKeyDown);
+  document.body.addEventListener('keyup', onKeyUp);
 }
 
 display.clear();
