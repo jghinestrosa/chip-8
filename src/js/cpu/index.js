@@ -1,5 +1,6 @@
-export default function create() {
-  const memory = new Uint8Array(4096); // 4kb memory
+import cycle from './instruction-cycle/index';
+
+export default function create(memory) {
   const registers = new Uint8Array(16); // 16 registers of 8 bits each
   const stack = new Uint16Array(16); // 16 values of 16 bit each
   const counters = {
@@ -12,5 +13,10 @@ export default function create() {
     ST: 0  // Sound timer
   };
 
-  return { memory, registers, stack, counters, timers };
+  function start({ display, keys }) {
+    const cpu = { registers, stack, counters, timers };
+    cycle({ cpu, memory, display, keys });
+  }
+
+  return { start };
 }

@@ -1,10 +1,11 @@
-import createCpu from './cpu/create';
-import cycle from './cpu/instruction-cycle';
+import createCpu from './cpu';
+import createMemory from './memory';
 import createDisplay from './display';
 import fonts from './fonts';
 import createKeysHandler from './keys';
 
-const cpu = createCpu();
+const memory = createMemory();
+const cpu = createCpu(memory);
 
 const canvas = document.querySelector('canvas.display');
 const fileInput = document.querySelector('#file-explorer');
@@ -12,9 +13,7 @@ const fileInput = document.querySelector('#file-explorer');
 const display = createDisplay(canvas);
 const { keys, onKeyDown, onKeyUp } = createKeysHandler();
 
-function load(romArrayBuffer, cpu) {
-  const { memory } = cpu;
-
+function load(romArrayBuffer) {
   for (let i = 0; i < fonts.length; i++) {
     const fontSprite = fonts[i];
     memory[i] = fontSprite;
@@ -42,7 +41,7 @@ fileInput.addEventListener('change', (event) => {
     window.uint8Array = uint8Array;
     load(uint8Array, cpu);
     listenKeyEvents();
-    cycle({ cpu, display, keys });
+    cpu.start({ display, keys });
   });
 
   fileReader.readAsArrayBuffer(file);

@@ -2,12 +2,11 @@ import fetch from './fetch';
 import decode from './decode';
 import execute from './execute';
 
-function step({ cpu, display, keys }) {
-  const { memory, registers, stack, counters, timers } = cpu;
+function step({ cpu, memory, display, keys }) {
+  const { registers, stack, counters, timers } = cpu;
   const opcode = fetch({ counters, memory });
   const instruction = decode(opcode);
   execute({ instruction, memory, registers, stack, counters, display, keys, timers });
-  // canvasHandler.drawFrameBuffer(display.getDisplayStatus());
 }
 
 // TODO: Improve this
