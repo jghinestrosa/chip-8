@@ -1,15 +1,14 @@
 import createCpu from './cpu/create';
 import cycle from './cpu/instruction-cycle';
 import createDisplay from './display';
-import createCanvasHandler from './canvasHandler';
 import fonts from './fonts';
 
 const cpu = createCpu();
-const display = createDisplay();
 
 const canvas = document.querySelector('canvas.display');
 const fileInput = document.querySelector('#file-explorer');
-const canvasHandler = createCanvasHandler(canvas, display.getWidth(), display.getHeight());
+
+const display = createDisplay(canvas);
 
 const keyMap = [
   '1', '2', '3', '4',
@@ -65,7 +64,7 @@ function listenKeyEvents() {
   });
 }
 
-canvasHandler.drawFrameBuffer(display.getDisplayStatus());
+display.clear();
 
 fileInput.addEventListener('change', (event) => {
   const [file] = event.target.files;
@@ -76,7 +75,7 @@ fileInput.addEventListener('change', (event) => {
     window.uint8Array = uint8Array;
     load(uint8Array, cpu);
     listenKeyEvents();
-    cycle({ cpu, display, keys, canvasHandler });
+    cycle({ cpu, display, keys });
   });
 
   fileReader.readAsArrayBuffer(file);

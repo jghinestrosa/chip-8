@@ -8,8 +8,8 @@ export default function create() {
     SP: -1 // stack pointer
   };
   const timers = {
-    DT: 0,
-    ST: 0 
+    DT: 0, // Delay timer
+    ST: 0  // Sound timer
   };
 
   return { memory, registers, stack, counters, timers };

@@ -227,6 +227,7 @@ export const executions = {
         const x = (vx + j) % display.getWidth(); // TODO: Width
         const y = (vy + i) % display.getHeight(); // TODO: Height
         const displayPixel = display.getPixel(x, y);
+        console.log('>>>> DRAWWWWWWW INSTRUCTION', display.drawPixel);
         display.drawPixel(x, y, displayPixel ^ bit);
 
         // only if displayPixel = 1 and bit = 1 --> 1 (flip, erase pixel in display)

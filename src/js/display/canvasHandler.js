@@ -4,21 +4,11 @@ export default function createCanvasHandler(canvas, width, height) {
   const ctx = canvas.getContext('2d');
   ctx.imageSmoothingEnabled = true;
 
-
   function drawPixel(x, y, value) {
-    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-    const data = imageData.data;
-
-    const index = canvas.width * y + x;
-    if (value) {
-      debugger;
-    }
-
-    data[index] = 0;
-    data[index + 1] = value ? 255 : 0;
-    data[index + 2] = 0;
-
-    ctx.putImageData(imageData, 0, 0);
+    const color = `rgb(0, ${value ? 255 : 0}, 0)`;
+    ctx.beginPath();
+    ctx.fillStyle = color;
+    ctx.fillRect(x, y, 1, 1);
   }
 
   function drawFrameBuffer(frameBuffer) {
@@ -43,5 +33,11 @@ export default function createCanvasHandler(canvas, width, height) {
     ctx.putImageData(imageData, 0, 0);
   }
 
-  return { drawPixel, drawFrameBuffer };
+  function clear() {
+    ctx.beginPath();
+    ctx.fillStyle = 'rgb(0,0,0)';
+    ctx.fillRect(0, 0, width, height);
+  }
+
+  return { drawPixel, drawFrameBuffer, clear };
 }

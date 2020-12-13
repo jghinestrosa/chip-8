@@ -1,7 +1,11 @@
+import createCanvasHandler from './canvasHandler';
+
 const DISPLAY_WIDTH = 64;
 const DISPLAY_HEIGHT = 32;
 
-export default function createDisplay() {
+export default function createDisplay(canvas) {
+  const canvasHandler = createCanvasHandler(canvas, DISPLAY_WIDTH, DISPLAY_HEIGHT);
+
   const frameBuffer = [];
 
   for (let i = 0; i < DISPLAY_HEIGHT; i++) {
@@ -15,10 +19,9 @@ export default function createDisplay() {
   window.frameBuffer = frameBuffer;
 
   function drawPixel(x, y, value) {
-    // if (value) {
-      // debugger;
-    // }
     frameBuffer[y][x] = value;
+    console.log('>>> DRAW PIXEL', x, y , value);
+    canvasHandler.drawPixel(x, y, value);
   }
 
   function getDisplayStatus() {
@@ -36,18 +39,15 @@ export default function createDisplay() {
   function getWidth() {
     return frameBuffer[0].length;
   }
-
-  function getCanvas() {
-    return canvas;
-  }
   
   function clear() {
-  for (let i = 0; i < DISPLAY_HEIGHT; i++) {
-    for (let j = 0; j < DISPLAY_WIDTH; j++) {
-      frameBuffer[i][j] = 0;
+    for (let i = 0; i < DISPLAY_HEIGHT; i++) {
+      for (let j = 0; j < DISPLAY_WIDTH; j++) {
+        frameBuffer[i][j] = 0;
+      }
     }
-  }
+    canvasHandler.clear();
   }
 
-  return { drawPixel, getDisplayStatus, getPixel, drawPixel, getCanvas, getWidth, getHeight, clear };
+  return { drawPixel, getDisplayStatus, getPixel, getWidth, getHeight, clear };
 }
