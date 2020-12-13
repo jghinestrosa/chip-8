@@ -1,4 +1,6 @@
-import { decode, execute } from './instructions';
+import fetch from './fetch';
+import decode from './decode';
+import execute from './execute';
 import createDisplay from './display';
 import createCanvasHandler from './canvasHandler';
 import fonts from './fonts';
@@ -73,14 +75,14 @@ function load(romArrayBuffer) {
 
 }
 
-function fetch() { 
+/*function fetch() { 
   const { PC } = counters;
   console.log(`> Fetching from position ${PC}`, (memory[PC] << 8 | memory[PC + 1]));
   return memory[PC] << 8 | memory[PC + 1];
-}
+}*/
 
 function step() {
-  const opcode = fetch();
+  const opcode = fetch({ counters, memory });
   const instruction = decode(opcode);
   execute({ instruction, memory, registers, stack, counters, display, keys, timers });
   canvasHandler.drawFrameBuffer(display.getDisplayStatus());
