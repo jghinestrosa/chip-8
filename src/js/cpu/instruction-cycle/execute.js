@@ -12,8 +12,8 @@ export const executions = {
 
     console.log(`> RET`);
 
-    counters.PC = stack[counters.SP]
-    counters.SP--
+    counters.PC = stack[counters.SP];
+    counters.SP--;
   },
   JP_ADDR: ({ args, counters }) => {
     const [addr] = args;
@@ -35,10 +35,10 @@ export const executions = {
     counters.PC = addr;
   },
   'SE_VX_KK': ({ args, counters, registers }) => {
-    const vx = registers[args[0]];
-    const kk = args[1];
+    const [regX, kk] = args;
+    const vx = registers[regX];
 
-    console.log(`> SE_VX_KK - SE V${vx} ${kk}`);
+    console.log(`> SE_VX_KK - SE V${regX} ${kk}`);
 
     if (vx === kk) {
       counters.PC = counters.PC + 4;
@@ -74,72 +74,80 @@ export const executions = {
     counters.PC = counters.PC + 2;
   },
   LD_VX_KK: ({ args, registers, counters }) => {
-    const [vx, kk] = args;
+    const [regX, kk] = args;
 
-    console.log(`> LD_VX_KK - LD V${vx} ${kk}`);
+    console.log(`> LD_VX_KK - LD V${regX} ${kk}`);
 
-    registers[vx] = kk;
+    registers[regX] = kk;
     counters.PC = counters.PC + 2;
   },
   ADD_VX_KK: ({ registers, args, counters }) => {
-    const vx = registers[args[0]];
-    const kk = args[1];
-    registers[args[0]] = vx + kk;
+    const [regX, kk] = args;
+    const vx = registers[regX];
 
-    console.log(`> ADD ${kk} to V${args[0]} and save it in V${args[0]}`);
+    const result = vx + kk;
+
+    registers[regX] = result > 255 ? result - 256 : result;
+
+    console.log(`> ADD ${kk} to V${regX} and save it in V${regX}`);
 
     counters.PC = counters.PC + 2;
   },
   LD_VX_VY: ({ registers, args, counters }) => {
-    const vy = registers[args[1]];
-    registers[args[0]] = vy;
+    const [regX, regY] = args;
+    const vy = registers[regY];
+    registers[regX] = vy;
 
-    console.log(`> LD_VX_VY - LD V${args[1]} to V${args[0]}`);
+    console.log(`> LD_VX_VY - LD V${regY} to V${regX}`);
 
     counters.PC = counters.PC + 2;
   },
   OR_VX_VY: ({ registers, args, counters }) => {
-    const vx = registers[args[0]];
-    const vy = registers[args[1]];
-    registers[args[0]] = vx | vy;
+    const [regX, regY] = args;
+    const vx = registers[regX];
+    const vy = registers[regY];
+    registers[regX] = vx | vy;
 
-    console.log(`> OR_VX_VY - OR V${args[0]} V${args[1]}`);
+    console.log(`> OR_VX_VY - OR V${regX} V${regY}`);
 
     counters.PC = counters.PC + 2;
   },
   AND_VX_VY: ({ registers, args, counters }) => {
-    const vx = registers[args[0]];
-    const vy = registers[args[1]];
-    registers[args[0]] = vx & vy;
+    const [regX, regY] = args;
+    const vx = registers[regX];
+    const vy = registers[regY];
+    registers[regX] = vx & vy;
 
-    console.log(`> AND_VX_VY - AND V${args[0]} V${args[1]}`);
+    console.log(`> AND_VX_VY - AND V${regX} V${regY}`);
 
     counters.PC = counters.PC + 2;
   },
   XOR_VX_VY: ({ registers, args, counters }) => {
-    const vx = registers[args[0]];
-    const vy = registers[args[1]];
-    registers[args[0]] = vx ^ vy;
+    const [regX, regY] = args;
+    const vx = registers[regX];
+    const vy = registers[regY];
+    registers[regX] = vx ^ vy;
 
-    console.log(`> XOR_VX_VY - XOR V${args[0]} V${args[1]}`);
+    console.log(`> XOR_VX_VY - XOR V${regX} V${regY}`);
 
     counters.PC = counters.PC + 2;
   },
   ADD_VX_VY: ({ registers, args, counters }) => {
     const [regX, regY] = args; 
-    const x = registers[regX];
-    const y = registers[regY];
-    registers[regX] = x + y;
+    const vx = registers[regX];
+    const vy = registers[regY];
 
-    console.log(`> ADD_VX_VY - ADD ${y} to ${x} and save it in V${regX}`);
+    registers[regX] = vx + vy;
+
+    console.log(`> ADD_VX_VY - ADD ${vy} to ${vx} and save it in V${regX}`);
 
     counters.PC = counters.PC + 2;
   },
   SUB_VX_VY: ({ registers, args, counters }) => {
     const [regX, regY] = args; 
-    const x = registers[regX];
-    const y = registers[regY];
-    registers[regX] = x - y;
+    const vx = registers[regX];
+    const vy = registers[regY];
+    registers[regX] = vx - vy;
 
     console.log(`> SUB_VX_VY - SUB V${regX} V${regY}`);
 
@@ -147,9 +155,9 @@ export const executions = {
   },
   SHR_VX_VY: ({ registers, args, counters }) => {
     const [regX, regY] = args; 
-    const x = registers[regX];
-    registers[0xf] = x & 1;
-    registers[regX] = x >> 1;
+    const vx = registers[regX];
+    registers[0xf] = vx & 1;
+    registers[regX] = vx >> 1;
     
     console.log(`> SHR_VX_VY - SHR V${regX} V${regY}`);
 
@@ -157,10 +165,10 @@ export const executions = {
   },
   SUBN_VX_VY: ({ registers, args, counters }) => {
     const [regX, regY] = args; 
-    const x = registers[regX];
-    const y = registers[regY];
-    registers[0xf] = y > x ? 1 : 0;
-    registers[regX] = y - x;
+    const vx = registers[regX];
+    const vy = registers[regY];
+    registers[0xf] = vy > vx ? 1 : 0;
+    registers[regX] = vy - vx;
 
     console.log(`> SUBN_VX_VY - SUBN V${regX} V${regY}`);
 
@@ -168,9 +176,9 @@ export const executions = {
   },
   SHL_VX_VY: ({ registers, args, counters }) => {
     const [regX, regY] = args; 
-    const x = registers[regX];
-    registers[0xf] = x >> 7;
-    registers[regX] = x << 1;
+    const vx = registers[regX];
+    registers[0xf] = vx >> 7;
+    registers[regX] = vx << 1;
 
     console.log(`> SHL_VX_VY - SHL V${regX} V${regY}`);
 
@@ -178,12 +186,12 @@ export const executions = {
   },
   SNE_VX_VY: ({ registers, args, counters }) => {
     const [regX, regY] = args; 
-    const x = registers[regX];
-    const y = registers[regY];
+    const vx = registers[regX];
+    const vy = registers[regY];
 
     console.log(`> SNE_VX_VY - SNE V${regX} V${regY}`);
 
-    if (x != y) {
+    if (vx != vy) {
       counters.PC = counters.PC + 4;
       return;
     }
