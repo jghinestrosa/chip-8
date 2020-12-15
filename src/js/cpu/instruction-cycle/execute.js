@@ -137,6 +137,7 @@ export const executions = {
     const vx = registers[regX];
     const vy = registers[regY];
 
+    registers[0xf] = vx + vy > 512 ? 1 : 0;
     registers[regX] = vx + vy;
 
     console.log(`> ADD_VX_VY - ADD ${vy} to ${vx} and save it in V${regX}`);
@@ -147,6 +148,8 @@ export const executions = {
     const [regX, regY] = args; 
     const vx = registers[regX];
     const vy = registers[regY];
+
+    registers[0xf] = vx > vy ? 1 : 0;
     registers[regX] = vx - vy;
 
     console.log(`> SUB_VX_VY - SUB V${regX} V${regY}`);
