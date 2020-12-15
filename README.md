@@ -1,7 +1,7 @@
 # Chip-8
 
 ## Pending tasks
-- Add public domain ROMs to the project
+- ~Add public domain ROMs to the project~
 - Add instructions for each pre-loaded game
 - Unit tests
 - Implement sound
