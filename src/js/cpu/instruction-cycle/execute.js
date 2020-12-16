@@ -336,7 +336,7 @@ export const executions = {
     const [regX] = args;
     const vx = registers[regX];
 
-    console.log(`> LD_F_VX - LD F V${regX}`);
+    console.log(`> LD_F_VX - LD F V${regX} - V${regX} = ${vx}`);
 
     if (vx > 0xf) {
       throw new Error('> Font Digit not valid');
@@ -348,20 +348,23 @@ export const executions = {
   },
   LD_B_VX: ({ registers, args, counters, memory }) => {
     const [regX] = args;
-    const vx = registers[regX];
+    let vx = registers[regX];
 
     console.log(`> LD_B_VX - LD B V${regX}`);
 
     if (counters.I > 4093) {
       throw new Error('Memory out of bounds.')
     }
-    
-    // extremely lazy way... improve it by doing something more efficient
-    const bcd = vx.toString()
-      .split('')
-      .map((val) => parseInt(val))
 
-    for (let i = 0; i < 3; i++) {
+    const hundreds = Math.floor(vx / 100); // hundreds digit
+    vx = vx - hundreds * 100; // removes the first digit from vx
+    const tens = Math.floor(vx / 10); // tens digit
+    vx = vx - tens * 10; // removes the tens digit from the updated vx
+    const ones = Math.floor(vx)
+
+    const bcd = [hundreds, tens, ones];
+
+    for (let i = 0; i < bcd.length; i++) {
       memory[counters.I + i] = bcd[i];
     }
 
