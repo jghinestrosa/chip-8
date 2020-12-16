@@ -4,12 +4,14 @@ import createDisplay from './display';
 import loadFonts from './fonts';
 import createKeysHandler from './keys';
 import loadRom from './rom';
+import getGameInstructions from './games-instructions';
 
 // DOM elements
 const canvas = document.querySelector('canvas.display');
 const h2 = document.querySelector('h2');
 const fileInput = document.querySelector('#file-explorer');
 const select = document.querySelector('#select-preloaded-rom');
+const pre = document.querySelector('#instructions');
 
 // Chip-8 related objects
 const { memory, clearMemory } = createMemory();
@@ -52,6 +54,7 @@ function createSwitchRom(romArrayBuffer) {
 function start(romArrayBuffer) {
   loadRom(memory, romArrayBuffer);
   cpu.start({ display, keys });
+  // foo(memory);
 }
 
 function onArrayBufferReady(arrayBuffer) {
@@ -93,4 +96,5 @@ select.addEventListener('change', (event) => {
   fetch(`/roms/${value}`)
     .then((response) => response.arrayBuffer())
     .then(onArrayBufferReady)
+    .then(() => { pre.textContent = getGameInstructions(value)})
 });

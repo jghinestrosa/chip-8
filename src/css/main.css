@@ -34,6 +34,8 @@ h2 {
 }
 
 #select-preloaded-rom {
+  -moz-appearance: none;
+  -webkit-appearance: none;
   font-family: 'Press Start 2P';
   font-size: 0.8em;
   color: #0f0;
@@ -45,6 +47,7 @@ h2 {
 
 .upload-file, .select-preloaded-rom {
   display: inline-block;
+  margin: 0.5em;
 }
 
 #label-file-explorer {
@@ -54,8 +57,33 @@ h2 {
   cursor: pointer;
   border: 2px solid gray;
   padding: 1em;
+  display: inline-block;
 }
 
 #file-explorer {
   display: none;
+}
+
+.game-instructions {
+  text-align: center;
+}
+
+.game-instructions pre {
+  display: inline-block;
+  font-family: 'Press Start 2P';
+  font-size: 0.8em;
+  color: #0f0;
+  text-align: left;
+  line-height: 1.5em;
+}
+
+.key-layout {
+  font-family: 'Press Start 2P';
+  color: #0f0;
+  text-align: center;
+}
+
+.key-layout span {
+  display: inline-block;
+  padding: 0.5em;
 }

@@ -288,6 +288,7 @@ export const executions = {
   },
   LD_VX_K: ({ registers, args, keys, counters }) => {
     const { lastPressed } = keys;
+    const [regX] = args;
 
     keys.lastPressed = -1; // if there is a key pressed, once that is read, we have to clear the register
 
@@ -297,7 +298,6 @@ export const executions = {
       return;
     }
 
-    const [regX] = args;
     registers[regX] = lastPressed;
 
     counters.PC = counters.PC + 2;
