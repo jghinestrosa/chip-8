@@ -1,14 +1,14 @@
 {
   "name": "chip-8",
   "version": "1.0.0",
-  "description": "",
+  "description": "A Chip-8 implementation in JavaScript",
   "main": "index.js",
   "scripts": {
     "start": "parcel index.html",
     "build": "parcel build index.html",
     "test": "jest"
   },
-  "author": "",
+  "author": "Jorge García Hinestrosa",
   "license": "MIT",
   "dependencies": {
     "parcel": "1.12.4"

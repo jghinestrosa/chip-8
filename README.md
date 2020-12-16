@@ -1,5 +1,29 @@
 # Chip-8
 
+## Description
+
+A Chip-8 implementation in JavaScript.
+
+## Instructions
+
+### Dev server
+
+```
+npm start
+```
+
+### Build the project for production
+
+```
+npm run build
+```
+
+### Run unit tests
+
+```
+npm test
+```
+
 ## Pending tasks
 - ~Add public domain ROMs to the project~
 - ~Add instructions for each pre-loaded game~
@@ -8,7 +32,7 @@
 - Double check if the speed for operation cycles is correct or not 
 
 ## Motivation
-I have been always intrigued in how emulators work. It always felt like magic to me to be able to emulate software from different platforms and hardware. Because of this, I decided to start learning and implement one by myself.
+I have been always intrigued by how emulators work. Emulate software from different platforms and hardware always felt like magic to me. Because of this, I decided to start learning and implement one by myself.
 
 I chosed Chip-8 because of its simplicity and because the web is full of documentation about it. It looked like a good start to me.
 
