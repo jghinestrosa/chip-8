@@ -18,6 +18,7 @@ I chosed Chip-8 because of its simplicity and because the web is full of documen
 - [Chip8.js](https://github.com/taniarascia/chip8) by Tania Rascia
 - [Cowgod's Chip-8 Technical Reference](http://devernay.free.fr/hacks/chip8/C8TECH10.HTM) by Thomas P. Greene
 - [How to write an emulator (CHIP-8 interpreter)](http://www.multigesture.net/articles/how-to-write-an-emulator-chip-8-interpreter/) by Laurence Muller
+- [David Winter's CHIP-8 emulation page](http://pong-story.com/chip8/) by David Winter
 - [Chip-8 Wikipedia](https://en.wikipedia.org/wiki/CHIP-8)
 
 ## Thanks
